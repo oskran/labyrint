@@ -6,12 +6,12 @@ class Labyrint {
     Rute[][] ruter;
     int antallRader;
     int antallKolonner;
-    Lenkeliste<String> veiListe = new Lenkeliste<String>();
+    Lenkeliste<String> veiListe = new Lenkeliste<>();
 
-    private Labyrint(Rute[][] ruterInn, int raderInn, int kolonnerInn) {
+    private Labyrint(Rute[][] ruterInn, int antallRader, int antallKolonner) {
         ruter = ruterInn;
-        antallRader = raderInn;
-        antallKolonner = kolonnerInn;
+        this.antallRader = antallRader;
+        this.antallKolonner = antallKolonner;
     }
 
     public static Labyrint lesFraFil(File fil) throws FileNotFoundException {
@@ -22,7 +22,7 @@ class Labyrint {
         int kolonnerInn = Integer.parseInt(linje1[1]);
         Rute[][] ruterInn = new Rute[raderInn][kolonnerInn];
 
-        Labyrint labyrint = new Labyrint(ruterInn, raderInn, kolonnerInn);
+        Labyrint lab = new Labyrint(ruterInn, raderInn, kolonnerInn);
 
         // Legg inn ruter i labyrinter
         for (int i = 0; i < raderInn; i++) {
@@ -31,16 +31,18 @@ class Labyrint {
                 if (linje[j].equals(".")) {
                     if (erAapning(raderInn, kolonnerInn, i, j)) {
 
-                        ruterInn[i][j] = new Aapning(labyrint, i, j);
+                        ruterInn[i][j] = new Aapning(lab, i, j);
                     } else {
-                        ruterInn[i][j] = new HvitRute(labyrint, i, j);
+                        ruterInn[i][j] = new HvitRute(lab, i, j);
 
                     }
                 } else if (linje[j].equals("#")) {
-                    ruterInn[i][j] = new SortRute(labyrint, i, j);
+                    ruterInn[i][j] = new SortRute(lab, i, j);
                 }
             }
-        }
+        } 
+
+        scan.close();
 
         // Legg til naboer
         for (int rad = 0; rad < raderInn; rad++) {
@@ -62,15 +64,13 @@ class Labyrint {
             }
         }
 
-        return labyrint;
+        return lab;
     }
 
-    private static Boolean erAapning(int raderInn, int kolonnerInn, int rad, int kolonne) {
-        if (rad + 1 == raderInn || rad == 0 || kolonne + 1 == kolonnerInn || kolonne == 0) {
-            return true;
-        } else {
-            return false;
-        }
+
+
+    private static boolean erAapning(int raderInn, int kolonnerInn, int rad, int kolonne) {
+        return (rad + 1 == raderInn || rad == 0 || kolonne + 1 == kolonnerInn || kolonne == 0);
     }
 
     Lenkeliste<String> finnUtveiFra(int kol, int rad) {
@@ -81,6 +81,14 @@ class Labyrint {
 
     void leggTilVei(String vei) {
         veiListe.leggTil(vei);
+    }
+
+    public int hentKolonner(){
+        return this.antallKolonner;
+    }
+
+    public int hentRader(){
+        return this.antallRader;
     }
 
     @Override
