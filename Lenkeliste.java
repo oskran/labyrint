@@ -1,4 +1,5 @@
 import java.util.Iterator;
+import java.util.NoSuchElementException;
 
 /**
  * Representerer en lenkeliste.
@@ -10,11 +11,13 @@ class Lenkeliste<T> implements Liste<T> {
      * Representerer en Node i lenkelisten
      */
     class Node {
+
         Node neste;
+
         T data;
 
         Node(T x) {
-            data = x;
+            this.data = x;
         }
     }
 
@@ -23,26 +26,28 @@ class Lenkeliste<T> implements Liste<T> {
     class LenkelisteIterator implements Iterator<T> {
 
         private Lenkeliste<T> liste;
-        private int posIter;
 
-        public LenkelisteIterator(Lenkeliste<T> nyLL) {
-            liste = nyLL;
-            posIter = 0;
+        private int posisjon;
+
+        public LenkelisteIterator(Lenkeliste<T> liste) {
+            this.liste = liste;
+            this.posisjon = 0;
         }
 
         public boolean hasNext() {
-            return (posIter < liste.stoerrelse());
+            return (posisjon < liste.stoerrelse());
         }
 
         public T next() {
-            return liste.hent(posIter++);
-        }
+            if(!hasNext()){
+                throw new NoSuchElementException();
+            }
 
-        public void remove() {
+            return liste.hent(posisjon++);
         }
     }
 
-    public Iterator iterator() {
+    public Iterator<T> iterator() {
         return new LenkelisteIterator(this);
     }
 
@@ -67,7 +72,6 @@ class Lenkeliste<T> implements Liste<T> {
      * @param x Et typeparameter T som representerer dataen til noden.
      */
     public void leggTil(T x) {
-
         if (start == null) {
             Node n = new Node(x);
             start = n;
@@ -87,7 +91,6 @@ class Lenkeliste<T> implements Liste<T> {
      * @param x   Et typeparameter T som representerer dataen til noden.
      */
     public void leggTil(int pos, T x) {
-
         // Hvis posisjonen refererer til en Node som ikke finnes, kast unntak.
         if (pos < 0 || pos > this.stoerrelse()) {
             throw new UgyldigListeIndeks(pos);
@@ -95,7 +98,7 @@ class Lenkeliste<T> implements Liste<T> {
 
         Node n = start;
         int teller = 0;
-
+        
         // Hvis posisjonen er 0, lag en ny head-Node.
         if (pos == 0) {
             Node startForrige = start;
