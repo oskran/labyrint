@@ -15,19 +15,19 @@ import java.io.File;
 import java.util.Scanner;
 
 public class Gui extends Application {
-    Rute brett[];
-    Labyrint l = null;
+    Knapp brett[];
+    Labyrint l;
     int rader;
     int kolonner;
     boolean[][] utveiMatrise;
     GridPane rutenett;
 
-    class Rute extends Button {
+    class Knapp extends Button {
         char merke = ' ';
         int rad;
         int kolonne;
 
-        Rute() {
+        Knapp() {
             super(" ");
             setFont(new Font(10));
             setPrefSize(25, 25);
@@ -60,7 +60,7 @@ public class Gui extends Application {
         this.rader = l.antallRader;
         this.kolonner = l.antallKolonner;
 
-        brett = new Rute[kolonner * rader];
+        brett = new Knapp[kolonner * rader];
         Klikkbehandler klikk = new Klikkbehandler();
 
         for (int i = 0; i < kolonner * rader; i++) {
@@ -68,7 +68,7 @@ public class Gui extends Application {
             int rad = i / kolonner;
             int kolonne = i % kolonner;
 
-            brett[i] = new Rute();
+            brett[i] = new Knapp();
             brett[i].setOnAction(klikk);
             brett[i].setText(String.valueOf(l.ruter[rad][kolonne].tilTegn()));
             brett[i].settKoordinat(rad, kolonne);
@@ -90,7 +90,7 @@ public class Gui extends Application {
     class Klikkbehandler implements EventHandler<ActionEvent> {
         @Override
         public void handle(ActionEvent e) {
-            finnUtvei((Rute) e.getSource());
+            finnUtvei((Knapp) e.getSource());
         }
     }
 
@@ -106,7 +106,7 @@ public class Gui extends Application {
         return losning;
     }
 
-    void finnUtvei(Rute r) {
+    void finnUtvei(Knapp r) {
         try {
             int startKol = r.kolonne;
             int startRad = r.rad;
@@ -126,7 +126,7 @@ public class Gui extends Application {
                     int rad = i / kolonner;
                     int kolonne = i % kolonner;
 
-                    if (utveiMatrise[rad][kolonne] == true) {
+                    if (utveiMatrise[rad][kolonne]) {
                         brett[i].setText("O");
                     }
                 }
