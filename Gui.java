@@ -112,12 +112,14 @@ public class Gui extends Application {
             int startRad = r.rad;
 
             /// Finn utveier som starter på ruten som ble klikket på
-            Liste<String> utveier = l.finnUtveiFra(startKol, startRad);
+            Lenkeliste<String> utveier = l.finnUtveiFra(startKol, startRad);
+            System.out.println(utveier.stoerrelse());
 
-            // Hent ut den forste utveien.
-            String losning = utveier.hent(0);
+
 
             if (utveier.stoerrelse() != 0) {
+                // Hent ut den forste utveien.
+                String losning = utveier.hent(0);
 
                 utveiMatrise = losningStringTilTabell(losning, kolonner, rader);
 
