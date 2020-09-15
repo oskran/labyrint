@@ -17,6 +17,7 @@ abstract class Rute {
     private Rute sor;
     private Rute ost;
     private Rute vest;
+    private boolean besokt = false;
 
     public Rute(Labyrint lab, int r, int kol) {
         kolonne = kol;
@@ -64,6 +65,14 @@ abstract class Rute {
         return kolonne;
     }
 
+    boolean hentBesokt(){
+        return besokt;
+    }
+
+    void besok(){
+        besokt = true;
+    }
+
     /**
      * Bygger opp en string med utveien til labyrinten ved aa rekursivt sjekke
      * noen av naborutene er utveier. 
@@ -77,6 +86,9 @@ abstract class Rute {
      */
 
     void gaa(Rute r, String retning, String vei) {
+
+        r.besok();
+
         String forelopigVei = vei;
 
         if (r.erAapning() == false) {
@@ -94,19 +106,22 @@ abstract class Rute {
         }
 
         if (r.tilTegn() != '#') {
-            if (!"sor".equals(retning)) {
+            System.out.println(r.hentRad() + " " + r.hentKolonne());
+            if (!r.hentNord().hentBesokt()) {
                 gaa(r.hentNord(), "nord", forelopigVei);
             }
-            if (!"nord".equals(retning)) {
+            if (!r.hentSor().hentBesokt()) {
                 gaa(r.hentSor(), "sor", forelopigVei);
             }
-            if (!"vest".equals(retning)) {
+            if (!r.hentOst().hentBesokt()) {
                 gaa(r.hentOst(), "ost", forelopigVei);
             }
-            if (!"ost".equals(retning)) {
+            if (!r.hentVest().hentBesokt()) {
                 gaa(r.hentVest(), "vest", forelopigVei);
             }
         }
+
+        return;
     }
 
     void finnUtvei() {
